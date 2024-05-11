@@ -19,17 +19,17 @@ class UserController extends Controller
 
         $search = request('search');
         if ($search) {
-            $users = User::where(function ($query) use ($search) {
+            $users = User::with('todos')->where(function ($query) use ($search) {
                 $query->where('name', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
             })
-                ->where('id', '!=', '1')
                 ->orderBy('name')
+                ->where('id', '!=', '1')
                 ->paginate(10)
                 // ->simplePaginate(10)
                 ->withQueryString();
         } else {
-            $users = User::where('id', '!=', '1')
+            $users = User::with('todos')->where('id', '!=', '1')
                 ->orderBy('name')
                 ->paginate(10);
             // ->simplePaginate(10);
